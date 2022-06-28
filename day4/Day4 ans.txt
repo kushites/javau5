@@ -1,0 +1,69 @@
+mysql> create database practice;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use practice;
+Database changed
+
+mysql> insert into city values(3878,'Scottsdale','USA','Arizona',202705);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into city values(3965,'Corona','USA','California',90000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into city values(3973,'Concord','USA','California',121780);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into city values(3977,'Cedar Rapids','USA','Iowa',120758);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into city values(3982,'Coral Springs','USA','Florida',87456);
+Query OK, 1 row affected (0.01 sec)
+
+=====================================================
+Q1. Query all columns for all American cities in the CITY table with
+populations larger than 100000. The CountryCode for America is the USA.
+
+Ans1:-
+
+mysql> Select * from city where population>100000;
++------+--------------+-------------+------------+------------+
+| id   | name         | countrycode | district   | population |
++------+--------------+-------------+------------+------------+
+| 3878 | Scottsdale   | USA         | Arizona    |     202705 |
+| 3973 | Concord      | USA         | California |     121780 |
+| 3977 | Cedar Rapids | USA         | Iowa       |     120758 |
++------+--------------+-------------+------------+------------+
+3 rows in set (0.00 sec)
+
+
+=================================================================
+Q2. Query the total population of all cities in the CITY where
+The district is California.
+
+Ans2:-
+
+mysql> select sum(population) total_population from city where district='California';
++------------------+
+| total_population |
++------------------+
+|           211780 |
++------------------+
+1 row in set (0.00 sec)
+
+====================================================================
+Q3. Query the average population for all cities in CITY, rounded
+down to the nearest integer.
+
+Ans3:-
+
+mysql> select avg(population) Averge_population from city;
++-------------------+
+| Averge_population |
++-------------------+
+|       124539.8000 |
++-------------------+
+1 row in set (0.00 sec)
+
+===========================END=======================================
+
+
