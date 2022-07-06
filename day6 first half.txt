@@ -1,0 +1,128 @@
+Q1.We would like to display this table such that if the department name is
+‘CS’, it gets modified to ‘Computer Science’, if it is ‘EC’ it gets modified to
+‘Electronics and Communication’, and if it is ‘HSS’ it gets modified to
+‘Humanities and Social Sciences’.
+Write the query to display the modified table.
+
+Ans1:-
+mysql> create table faculty(facultyid int, name varchar(28), department varchar(28), gender varchar(28),
+ salary int, working_hours int);
+
+mysql> insert into faculty values(001, "akash", "cs", "m", 50000, 45);
+
+mysql> insert into faculty values(002, "sahil", "ec", "m", 25000, 50);
+
+mysql> insert into faculty values(003, "john", "hss", "m", 100000, 60);
+
+mysql> insert into faculty values(004, "shelley", "cs", "f", 75000, 80);
+
+mysql> insert into faculty values(005, "anannya", "cs", "f", 45000, 100);
+
+mysql> insert into faculty values(006, "sia", "hss", "f", 60000, 40);
+
+mysql> create table sub;
+
+mysql> insert into sub("cs", "computer science");
+
+mysql> insert into sub values("hss", "humanities and social sciences");
+
+mysql> insert into sub values("ec", "electronics and communication");
+
+mysql> select f.facultyid, f.name, s.full, f.gender, f.salary, f.working_hours from faculty f inner join sub s on f.department = s.sub;
++-----------+---------+------------------------------+--------+--------+---------------+
+| facultyid | name    | full                         | gender | salary | working_hours |
++-----------+---------+------------------------------+--------+--------+---------------+
+|         1 | akash   | computer science             | m      |  50000 |            45 |
+|         2 | sahil   | electronics & communication  | m      |  25000 |            50 |
+|         3 | john    | humanities & social sciences | m      | 100000 |            60 |
+|         4 | shelley | computer science             | f      |  75000 |            80 |
+|         5 | anannya | computer science             | f      |  45000 |           100 |
+|         6 | sia     | humanities & social sciences | f      |  60000 |            40 |
++-----------+---------+------------------------------+--------+--------+---------------+
+
+===========================================================================================
+
+Q2.write the query to display the vacation hours for salaried faculty based on their
+working hours. If working hours <=50 update their vacation hours to ‘not allowed’,
+working hours <=80 update their vacation hours to 20, working hours <=120 update
+their vacation hours to 40.
+
+Ans2:-
+mysql> select name, department, case when working_hours<=50 then "not allowed" when working_hours<=120 and working_hours>80 then "80"
+ when working_hours<=80 and working_hours>50 then "40" end as vacation_hours from faculty;
++---------+------------+----------------+
+| name    | department | vacation_hours |
++---------+------------+----------------+
+| akash   | cs         | not allowed    |
+| sahil   | ec         | not allowed    |
+| john    | hss        | 40             |
+| shelley | cs         | 40             |
+| anannya | cs         | 80             |
+| sia     | hss        | not allowed    |
++---------+------------+----------------+
+
+=====================================================================================
+
+Q3.Explain what is a PK, Candidate Key, Prime Attributes, or Non-prime Attributes ?
+
+Ans3:- 
+Primary key:-A column or column is called a primary key (PK) that uniquely identifies each row in the table.
+If you want to create a primary key, you should define a PRIMARY KEY constraint when you create or modify a table.
+When multiple columns are used as a primary key, it is known as the composite primary key.
+In designing the composite primary key, you should use as few columns as possible. It is good for storage and performance
+both, the more columns you use for the primary key the more storage space you require.
+
+Candidate key:-A candidate key is a subset of a super key set where the key which contains no redundant attribute is none 
+other than a Candidate Key. In order to select the candidate keys from the set of super key, we need to look at the super 
+key set.
+
+Prime Attributes:-A prime attribute is one of the attributes that make up the candidate key. In addition to being called 
+prime attributes, key attributes are another name for this type of attribute. It is also present in all of the candidate 
+keys. A set of attributes that uniquely identify tuples in a table is known as a Candidate Key. Candidate Key is a super 
+key with no attributes that are repeated. They are key attributes because they can be used to uniquely identify any of the 
+table's records.
+
+Non-Prime Attributes:-Non-prime attributes are those attributes of the relationships that do not present in any of the 
+possible candidate keys of the relation. They are also known as non-key attributes. A primary key is an attribute or group 
+of attributes used to uniquely identify any record in a table. The values of a primary key cannot be duplicated. Non-prime 
+(non-key) attributes are those that are not the primary key attributes. They can store a value an unlimited number of 
+times. They are non-key attributes because they cannot be used to uniquely identify any of the table's records.
+
+=======================================================================================
+Q4.Get the output table with rows as (student_id ,student_name , total marks) for all the
+students . If there is any student who did not attended any of the exams show their
+marks as -1.
+
+Ans4:-
+mysql> create table student(student_id int primary key, name varchar(28), address varchar(28));
+
+mysql> create table mark(mark_id int primary key, subject varchar(28), score int, stud_id int, 
+foreign key(stud_id) references student(student_id));
+
+mysql> insert into student values(1, "sanjay", "bhopal");
+
+mysql> insert into student values(2, "vishal", "nasik");
+
+mysql> insert into student values(3, "ravi", "banglore");
+
+mysql> insert into mark values(1,"java", 8, 1);
+
+mysql> insert into mark values(2,"dsa", 9, 1);
+
+mysql> insert into mark values(3,"java", 7, 2);
+
+mysql> insert into mark values(4,"dsa", null, 2);
+
+mysql> insert into mark values(5,"java", null, 3);
+
+mysql> insert into mark values(6,"dsa", null, 3);
+
+mysql> select s.name, ifnull(sum(m.score),"-1") marks from student s, mark m where s.student_id=m.stud_id group by stud_id;
++--------+-------+
+| name   | marks |
++--------+-------+
+| sanjay | 17    |
+| vishal | 7     |
+| ravi   | -1    |
++--------+-------+
+
