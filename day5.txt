@@ -1,0 +1,276 @@
+Q1)Display the students' details (who live in Delhi) and have
+enrolled in a Java Course.
+Ans:-
+mysql> create table Student(
+    -> S_ID varchar(3) primary key,
+    -> S_Name varchar(17),
+    -> S_Address varchar(20),
+    -> S_Phone int(10),
+    -> S_Age int
+    -> );
+
+mysql> insert into Student values
+	->('S1', 'RAM', 'DELHI', '9455123451', 18),
+	->('S2', 'RAMESH', 'GURGAON', '9652431543', 18),
+	->('S3', 'SUJIT', 'Chandigarh', '9156253131', 20),
+	->('S4', 'SURESH', 'DELHI', '9156768971', 18),
+	->('S5', 'Ratan', 'Delhi', '9567890876', 20)
+	->;
+
+mysql> select * from student;
+
+	OUTPUT:
+    ***
+	+------+--------+------------+------------+-------+
+	| s_id | S_Name | S_Address  | S_Phone    | S_Age |
+	+------+--------+------------+------------+-------+
+	| S1   | RAM    | DELHI      | 9455123451 |    18 |
+	| S2   | RAMESH | GURGAON    | 9652431543 |    18 |
+	| S3   | SUJIT  | Chandigarh | 9156253131 |    20 |
+	| S4   | SURESH | DELHI      | 9156768971 |    18 |
+	| S5   | Ratan  | Delhi      | 9567890876 |    20 |
+	+------+--------+------------+------------+-------+
+
+
+mysql> create table course_table(
+    -> C_id varchar(2),
+    -> C_name varchar(17)
+    -> );
+
+mysql> insert into course_table values
+    -> ('C1', 'DSA'),
+    -> ('C2', 'JAVA'),
+    -> ('C3', 'MERN')
+    -> ;
+
+mysql> select * from course_table;
+
+	OUTPUT:
+    ***
+	+------+--------+
+	| C_id | C_name |
+	+------+--------+
+	| C1   | DSA    |
+	| C2   | JAVA   |
+	| C3   | MERN   |
+	+------+--------+
+
+mysql> create table Student_course_table(
+    -> S_id varchar(2),
+    -> C_id varchar(2),
+    -> foreign key (Scid) references student(s_id)
+    -> );
+
+
+mysql> insert into Student_course_table values
+    -> ('S1', 'C1'),
+    -> ('S1', 'C3'),
+    -> ('S2', 'C1'),
+    -> ('S3', 'C2'),
+    -> ('S4', 'C2'),
+    -> ('S4', 'C3'),
+    -> ('S5', 'C2')
+    ->;
+
+mysql> select * from student_course_table;
+	
+	OUTPUT:
+    ***
+	+------+------+
+	| S_id | C_id |
+	+------+------+
+	| S1   | C1   |
+	| S1   | C3   |
+	| S2   | C1   |
+	| S3   | C2   |
+	| S4   | C2   |
+	| S4   | C3   |
+	| S5   | C2   |
+	+------+------+
+
+
+mysql> select student.s_id,s_name,s_address,s_phone,s_age from student
+    ->  INNER JOIN
+    ->  student_course_table on student_course_table.s_id = student.s_id
+    ->  AND
+    ->  student.s_address = 'delhi'
+    ->  AND
+    ->  student_course_table.c_id = 'c2';
+
+    OUTPUT:
+    ***
+	+------+--------+-----------+------------+-------+
+	| s_id | s_name | s_address | s_phone    | s_age |
+	+------+--------+-----------+------------+-------+
+	| S4   | SURESH | DELHI     | 9156768971 |    18 |
+	| S5   | Ratan  | Delhi     | 9567890876 |    20 |
+	+------+--------+-----------+------------+-------+
+
+
+=======================================================================
+
+Q2. Write the Query for the following condition-
+-Show the movie name, domestic sales, and international sales for each
+a movie that did better internationally rather than domestically in
+terms of sales.
+Ans2:-
+mysql> create table Movie_Table(
+    ->      ID int NOT NULL,
+    ->      Title varchar(20),
+    ->      Director varchar(20),
+    ->      YEAR int,
+    ->      Length_minutes int,
+    ->      primary key(ID)
+    ->      );
+
+
+mysql> insert into Movie_Table values
+    -> (1, 'Toy Story', 'John Lasseter', 1995, 81),
+    -> (2, 'A Bug_s Life', 'John Lasseter', 1998, 95),
+    -> (3, 'Toy Story 2', 'John Lasseter', 1999, 93),
+    -> (4, 'Monsters, Inc.', 'Pete Docter', 2001, 92),
+    -> (5, 'Civil War', 'Andrew Stanton', 2003, 107),
+    -> (6, 'The Incredibles', 'Brad Bird', 2004, 116)
+    -> ;
+
+
+mysql> select * from movie_table;
+
+	OUTPUT:
+	-------
+	+----+-----------------+----------------+------+----------------+
+	| ID | Title           | Director       | YEAR | Length_minutes |
+	+----+-----------------+----------------+------+----------------+
+	|  1 | Toy Story       | John Lasseter  | 1995 |             81 |
+	|  2 | A Bug_s Life    | John Lasseter  | 1998 |             95 |
+	|  3 | Toy Story 2     | John Lasseter  | 1999 |             93 |
+	|  4 | Monsters, Inc.  | Pete Docter    | 2001 |             92 |
+	|  5 | Civil War       | Andrew Stanton | 2003 |            107 |
+	|  6 | The Incredibles | Brad Bird      | 2004 |            116 |
+	+----+-----------------+----------------+------+----------------+
+
+	
+mysql> create table Movie_Rating_Table(
+    -> Movie_ID int NOT NULL,
+    -> Rating Double,
+    -> domestic_sales int,
+    -> international_sales int,
+    -> foreign key (Movie_ID) references movie_table(ID)
+    -> );
+	
+	
+mysql> insert into Movie_Rating_Table values
+    -> (5, 8.2, 380843261, 555900000),
+    -> (1, 7.4, 268492764, 475066843),
+    -> (3, 8, 206445654, 417277164),
+    -> (2, 6.4, 191452396, 368400000),
+    -> (4, 7.9, 245852179, 239163000),
+    -> (6, 8, 261441092, 370001000)
+    -> ;
+
+mysql> select * from Movie_Rating_Table;
+
+	OUTPUT:
+	-------
+	+----------+--------+----------------+---------------------+
+	| Movie_ID | Rating | domestic_sales | international_sales |
+	+----------+--------+----------------+---------------------+
+	|        5 |    8.2 |      380843261 |           555900000 |
+	|        1 |    7.4 |      268492764 |           475066843 |
+	|        3 |      8 |      206445654 |           417277164 |
+	|        2 |    6.4 |      191452396 |           368400000 |
+	|        4 |    7.9 |      245852179 |           239163000 |
+	|        6 |      8 |      261441092 |           370001000 |
+	+----------+--------+----------------+---------------------+
+
+
+
+Q1:- Show the movie name,domestic sales,international sales for each
+	 movie that did better internationally rather than domestically in
+     terms of sales.
+
+
+mysql> select mt.title,mr.domestic_sales,mr.international_sales from Movie_Table mt
+    -> INNER JOIN
+    -> Movie_Rating_Table mr on mt.id = mr.movie_id
+    -> AND
+    -> mr.domestic_sales < mr.international_sales;
+    
+    Option:
+    ------
+	+-----------------+----------------+---------------------+
+	| title           | domestic_sales | international_sales |
+	+-----------------+----------------+---------------------+
+	| Civil War       |      380843261 |           555900000 |
+	| Toy Story       |      268492764 |           475066843 |
+	| Toy Story 2     |      206445654 |           417277164 |
+	| A Bug_s Life    |      191452396 |           368400000 |
+	| The Incredibles |      261441092 |           370001000 |
+	+-----------------+----------------+---------------------+
+
+=====================================================================
+
+Q3.List all the movies by their ratings in descending order
+
+Ans:-
+mysql> select mt.title,mr.rating from Movie_Table mt,Movie_Rating_Table mr
+    -> where
+    -> mt.id = mr.movie_id
+    -> order by mr.rating desc;
+    
+    Option:
+    ------
+	+-----------------+--------+
+	| title           | rating |
+	+-----------------+--------+
+	| Civil War       |    8.2 |
+	| Toy Story 2     |      8 |
+	| The Incredibles |      8 |
+	| Monsters, Inc.  |    7.9 |
+	| Toy Story       |    7.4 |
+	| A Bug_s Life    |    6.4 |
+	+-----------------+--------+
+================================================================
+Q4. Write an SQL query to report the first name, last name, city,
+and state of each person in the Person table. If the address of a
+personId is not present in the Address table, report null instead.
+
+Ans:-
+mysql> create table Person_Table(
+    -> personID int NOT NULL,
+    -> lastName varchar(20),
+    -> firstName varchar(20),
+    -> primary key(personID)
+    -> );
+
+
+mysql> insert into Person_Table values
+    -> (1, 'Wang', 'Allen'),
+    -> (2, 'Alice', 'Bob')
+    -> ;
+
+mysql> select * from person_table;
+
+	OUTPUT:-
+	-------
+	+----------+----------+-----------+
+	| personID | lastName | firstName |
+	+----------+----------+-----------+
+	|        1 | Wang     | Allen     |
+	|        2 | Alice    | Bob       |
+	+----------+----------+-----------+
+
+mysql> select pt.firstName,pt.lastName,at.city,at.state from person_table pt
+    -> LEFT JOIN
+    -> Address_Table at
+    -> ON
+    -> pt.personID = at.personID
+    -> ;
++-----------+----------+---------------+----------+
+| firstName | lastName | city          | state    |
++-----------+----------+---------------+----------+
+| Allen     | Wang     | NULL          | NULL     |
+| Bob       | Alice    | New York City | New York |
++-----------+----------+---------------+----------+
+=====================================End=========================================
+
